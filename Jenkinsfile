@@ -16,8 +16,7 @@ pipeline {
         }
         stage('Deploy to Tomcat') {
             steps {
-                sh 'cp target/maven-app.war /opt/homebrew/opt/tomcat/libexec/webapps/'
-                sh 'brew services restart tomcat'
+                sh 'cp target/jenkins-webapp.war /opt/homebrew/opt/tomcat/libexec/webapps/'
             }
         }
     }
