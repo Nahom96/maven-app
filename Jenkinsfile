@@ -9,7 +9,9 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                withMaven(maven: 'Maven-Homebrew') {
+                    sh 'mvn clean package'
+                }
             }
         }
         stage('Deploy to Tomcat') {
