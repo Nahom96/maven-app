@@ -3,11 +3,10 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'nahom291/jenkins-webapp'
-        CREDENTIALS_ID = 'dockerhub-login'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-login'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Nahom96/maven-app.git'
@@ -16,13 +15,15 @@ pipeline {
 
         stage('Build Maven Project') {
             steps {
-                sh 'mvn clean package'
+                withMaven(maven: 'Maven-Homebrew') {  // <-- clearly required fix
+                    sh 'mvn clean package'
+                }
             }
         }
 
         stage('Docker Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                 }
             }
@@ -42,7 +43,7 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                sh 'cp target/maven-app.war /opt/homebrew/opt/tomcat/libexec/webapps/'
+                sh 'cp target/jenkins-webapp.war /opt/homebrew/opt/tomcat/libexec/webapps/'
             }
         }
     }
