@@ -2,46 +2,45 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_USERNAME = 'your-dockerhub-username'
-        DOCKER_IMAGE_NAME = 'maven-app'
+        IMAGE_NAME = 'nahom291/jenkins-webapp'
+        CREDENTIALS_ID = 'dockerhub-login'
     }
 
     stages {
-        stage('Checkout') {  // Pulls code from GitHub
+
+        stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Nahom96/maven-app.git'
             }
         }
 
-        stage('Build Maven Project') {  // Builds Maven project
+        stage('Build Maven Project') {
             steps {
-                withMaven(maven: 'Maven-Homebrew') {
-                    sh 'mvn clean package'
-                }
+                sh 'mvn clean package'
             }
         }
 
-        stage('Docker Login') {  // Authenticates with Docker Hub
+        stage('Docker Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-login', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                 }
             }
         }
 
-        stage('Docker Build') {  // Builds Docker image
+        stage('Docker Build') {
             steps {
-                sh 'docker build -t $DOCKER_HUB_USERNAME/$DOCKER_IMAGE_NAME .'
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
-        stage('Docker Push') {  // Pushes Docker image to Docker Hub
+        stage('Docker Push') {
             steps {
-                sh 'docker push $DOCKER_HUB_USERNAME/$DOCKER_IMAGE_NAME'
+                sh "docker push ${IMAGE_NAME}"
             }
         }
 
-        stage('Deploy to Tomcat') {  // Deploys to Tomcat server
+        stage('Deploy to Tomcat') {
             steps {
                 sh 'cp target/maven-app.war /opt/homebrew/opt/tomcat/libexec/webapps/'
             }
