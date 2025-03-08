@@ -50,14 +50,14 @@
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
           <archive>
-            <manifest>
-              <mainClass>com.example.MainApplication</mainClass>
-            </manifest>
+            <manifestEntries>
+              <Main-Class>com.example.MainApplication</Main-Class>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
 
-      <!-- Maven JAR Plugin: Ensures Main-Class is set -->
+      <!-- Maven JAR Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
