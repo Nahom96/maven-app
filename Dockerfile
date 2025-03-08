@@ -1,11 +1,10 @@
-# Use an official OpenJDK runtime as the base image
-FROM openjdk:17-jdk-slim
+FROM tomcat:11-jdk17
 
-# Set the working directory inside the container
-WORKDIR /app
+# Copy the WAR file to Tomcat's webapps directory
+COPY target/jenkins-webapp.war /usr/local/tomcat/webapps/jenkins-webapp.war
 
-# Copy the built .war file to the container
-COPY target/jenkins-webapp.war /app/jenkins-webapp.war
+# Expose Tomcat's default port
+EXPOSE 8080
 
-# Command to run the application
-CMD ["java", "-jar", "/app/jenkins-webapp.war"]
+# Start Tomcat
+CMD ["catalina.sh", "run"]
