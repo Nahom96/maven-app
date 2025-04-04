@@ -7,7 +7,7 @@ stages:
     jobs:
       - job: BuildJob
         pool:
-          name: Default  # Your self-hosted agent pool
+          name: Default  # Your self-hosted agent pool name
         steps:
           - task: Maven@3
             inputs:
@@ -43,7 +43,7 @@ stages:
                   inputs:
                     SourceFolder: '$(Pipeline.Workspace)/drop'
                     Contents: '**/*.war'
-                    TargetFolder: '/Users/nahom/DeployedApps'
+                    TargetFolder: '/Users/nahom/Desktop/DeployedApps'
 
                 - script: echo "✅ WAR file deployed to local folder!"
                   displayName: 'Deployment Confirmation'
