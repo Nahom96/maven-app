@@ -31,7 +31,9 @@ stages:
     jobs:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
-        environment: LocalAgent  # Make sure this matches the environment name in Azure DevOps
+        environment:
+          name: LocalAgent   # This MUST match the environment you created in Azure
+          resourceType: VirtualMachine
         strategy:
           runOnce:
             deploy:
@@ -39,11 +41,10 @@ stages:
                 - download: current
                   artifact: drop
 
-                - task: CopyFiles@2
-                  inputs:
-                    SourceFolder: '$(Pipeline.Workspace)/drop'
-                    Contents: '**/*.war'
-                    TargetFolder: '/Users/nahom/DeployedApps'  # Folder on your machine
+                - script: |
+                    mkdir -p /Users/nahom/DeployedApps
+                    cp $(Pipeline.Workspace)/drop/*.war /Users/nahom/DeployedApps/
+                  displayName: 'Copy WAR file to local folder'
 
-                - script: echo "✅ WAR file deployed to local folder!"
+                - script: echo "✅ WAR file successfully deployed to /Users/nahom/DeployedApps"
                   displayName: 'Deployment Confirmation'
