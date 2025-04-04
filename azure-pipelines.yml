@@ -1,0 +1,22 @@
+trigger:
+  - main
+
+pool:
+  name: Default  # or your self-hosted agent name
+
+steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      goals: 'package'
+      options: '-Dmaven.test.skip=true'
+      mavenVersionOption: 'Default'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'
+      jdkArchitectureOption: 'x64'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'target/jenkins-webapp.war'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
