@@ -7,7 +7,7 @@ stages:
     jobs:
       - job: BuildJob
         pool:
-          name: Default  # <<Nahom
+          name: Default  # This matches your self-hosted agent pool name
         steps:
           - task: Maven@3
             inputs:
@@ -16,7 +16,8 @@ stages:
               options: '-Dmaven.test.skip=true'
               mavenVersionOption: 'Default'
               javaHomeOption: 'Path'
-              jdkDirectory: '/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home'  # Update if needed
+              jdkDirectory: '/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home'  # ✅ Java 11 path on your Mac
+              jdkArchitectureOption: 'x64'
 
           - task: PublishBuildArtifacts@1
             inputs:
@@ -30,7 +31,7 @@ stages:
     jobs:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
-        environment: LocalAgent  # Must match your created environment name
+        environment: LocalAgent  # Make sure this matches the environment name in Azure DevOps
         strategy:
           runOnce:
             deploy:
@@ -42,7 +43,7 @@ stages:
                   inputs:
                     SourceFolder: '$(Pipeline.Workspace)/drop'
                     Contents: '**/*.war'
-                    TargetFolder: '/Users/nahom/DeployedApps'
+                    TargetFolder: '/Users/nahom/DeployedApps'  # Folder on your machine
 
                 - script: echo "✅ WAR file deployed to local folder!"
                   displayName: 'Deployment Confirmation'
