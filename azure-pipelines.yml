@@ -7,7 +7,7 @@ stages:
     jobs:
       - job: BuildJob
         pool:
-          name: Default  # Your self-hosted agent pool name
+          name: Default  # <<Nahom
         steps:
           - task: Maven@3
             inputs:
@@ -15,9 +15,8 @@ stages:
               goals: 'package'
               options: '-Dmaven.test.skip=true'
               mavenVersionOption: 'Default'
-              javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.11'
-              jdkArchitectureOption: 'x64'
+              javaHomeOption: 'Path'
+              jdkDirectory: '/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home'  # Update if needed
 
           - task: PublishBuildArtifacts@1
             inputs:
@@ -31,7 +30,7 @@ stages:
     jobs:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
-        environment: LocalAgent  # Must match exactly with your created environment
+        environment: LocalAgent  # Must match your created environment name
         strategy:
           runOnce:
             deploy:
@@ -43,7 +42,7 @@ stages:
                   inputs:
                     SourceFolder: '$(Pipeline.Workspace)/drop'
                     Contents: '**/*.war'
-                    TargetFolder: '/Users/nahom/Desktop/DeployedApps'
+                    TargetFolder: '/Users/nahom/DeployedApps'
 
                 - script: echo "✅ WAR file deployed to local folder!"
                   displayName: 'Deployment Confirmation'
