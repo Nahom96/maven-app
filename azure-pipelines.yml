@@ -6,8 +6,9 @@ stages:
     displayName: 'Build Stage'
     jobs:
       - job: BuildJob
+        displayName: 'Maven Build'
         pool:
-          name: Default  # This matches your self-hosted agent pool name
+          name: Default  # ✅ Agent pool where your self-hosted agent is registered
         steps:
           - task: Maven@4
             inputs:
@@ -16,7 +17,7 @@ stages:
               options: '-Dmaven.test.skip=true'
               mavenVersionOption: 'Default'
               javaHomeOption: 'Path'
-              jdkDirectory: '/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home'  # ✅ Java 11 path on your Mac
+              jdkDirectory: '/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home'
               jdkArchitectureOption: 'x64'
 
           - task: PublishBuildArtifacts@1
@@ -32,8 +33,9 @@ stages:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
         environment:
-          name: LocalAgent   # This MUST match the environment you created in Azure
-          resourceType: NahomsMacAgent
+          name: LocalAgent         # ✅ Name of your Azure DevOps Environment
+          resourceName: NahomsMacAgent  # ✅ Name of the agent registered to that environment
+          resourceType: virtualMachine
         strategy:
           runOnce:
             deploy:
