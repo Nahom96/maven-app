@@ -9,10 +9,10 @@ stages:
         pool:
           name: Default  # This matches your self-hosted agent pool name
         steps:
-          - task: Maven@3
+          - task: Maven@4
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'package'
+              goals: 'install -DskipTests'
               options: '-Dmaven.test.skip=true'
               mavenVersionOption: 'Default'
               javaHomeOption: 'Path'
