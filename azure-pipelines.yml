@@ -33,7 +33,7 @@ stages:
         displayName: 'Deploy WAR to Local Machine'
         environment:
           name: LocalAgent   # This MUST match the environment you created in Azure
-          resourceType: VirtualMachine
+          resourceType: NahomsMacAgent
         strategy:
           runOnce:
             deploy:
