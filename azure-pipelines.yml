@@ -8,7 +8,7 @@ stages:
       - job: BuildJob
         displayName: 'Maven Build'
         pool:
-          name: Default  # ✅ Agent pool where your self-hosted agent is registered
+          name: Default  # ✅ Self-hosted agent pool
         steps:
           - task: Maven@4
             inputs:
@@ -32,10 +32,7 @@ stages:
     jobs:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
-        environment:
-          name: LocalAgent         # ✅ Name of your Azure DevOps Environment
-          resourceName: NahomsMacAgent  # ✅ Name of the agent registered to that environment
-          resourceType: virtualMachine
+        environment: LocalAgent  # ✅ Keep this simple (just the name)
         strategy:
           runOnce:
             deploy:
