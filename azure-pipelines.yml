@@ -8,7 +8,7 @@ stages:
       - job: BuildJob
         displayName: 'Maven Build'
         pool:
-          name: Default  # ✅ Make sure this matches the name of your self-hosted agent pool
+          name: Default  
         steps:
           - task: Maven@4
             inputs:
@@ -33,8 +33,8 @@ stages:
       - deployment: DeployJob
         displayName: 'Deploy WAR to Local Machine'
         environment:
-          name: LocalAgent              # ✅ Must match Azure DevOps Environment name
-          resourceName: NahomsMacAgent # ✅ Must match registered machine name
+          name: LocalAgent            
+          resourceName: NahomsMacAgent  
           resourceType: virtualMachine
         strategy:
           runOnce:
